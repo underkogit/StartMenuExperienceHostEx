@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:StartMenuExperienceHostEx.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:StartMenuExperienceHostEx.Views.Controls"
+
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="StartMenuExperienceHostEx.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="StartMenuExperienceHostEx"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="#242424"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaToDecorationsHint="True"
+        Loaded="WinOnLoaded">
+    <Design.DataContext>
+
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+
+    <ScrollViewer>
+        <WrapPanel>
+
+            <ItemsControl ItemsSource="{Binding Applications}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate
+                        x:DataType="vm:ApplicationViewModel">
+
+                        <controls:ApplicationControl
+                            Width="96"
+                            Height="84"
+                            ApplicationName="{Binding Name}"
+                            Disk="{Binding Disk}"
+                            FilePath="{Binding FilePath}"
+                            FullFilePath="{Binding FullFilePath}"
+                            Image="{Binding Image}" />
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </WrapPanel>
+    </ScrollViewer>
+
+
+</Window>
