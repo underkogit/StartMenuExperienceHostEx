@@ -30,30 +30,32 @@ public partial class MainWindow : Window
         e.Handled = true;
     }
 
-    private void Window_OnDrop(object? sender, DragEventArgs e)
+    private async void Window_OnDrop(
+        object? sender,
+        DragEventArgs e)
     {
         if (!e.DataTransfer.Formats.Contains(DataFormat.File))
         {
             e.Handled = true;
             return;
         }
+
         var paths =
             from file in e.DataTransfer.TryGetFiles()
                          ?? Enumerable.Empty<IStorageItem>()
             let path = file.Path.LocalPath
             where File.Exists(path) || Directory.Exists(path)
             select path;
-        
+
         if (DataContext is MainWindowViewModel viewModel)
         {
+            Topmost = true;
+
             foreach (var path in paths)
             {
-                viewModel.AddApplication(path);
+                await viewModel.AddApplicationAsync(path);
             }
-
-            
         }
-        
 
         e.Handled = true;
     }

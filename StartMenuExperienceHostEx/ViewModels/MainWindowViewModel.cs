@@ -2,11 +2,14 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ExperienceHost.DataAccess.SQL.Data;
 using ExperienceHost.DataAccess.SQL.Entities;
 using ExperienceHost.DataAccess.SQL.Structures;
+using Microsoft.EntityFrameworkCore;
 using StartMenuExperienceHostEx.Extentions;
 using StartMenuExperienceHostEx.Helper;
 using StartMenuExperienceHostEx.Services;
@@ -20,15 +23,18 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
 
     private readonly SqliteDbContext _context;
     private readonly KeyboardShortcutService _shortcutService;
+    private readonly WindowInputService _windowInputService;
 
     private MainWindow? _mainWindow;
-    private bool _status;
+    private bool _status = true;
     private bool _disposed;
-
+    private CancellationTokenSource? _addApplicationCts;
     public MainWindowViewModel(
         SqliteDbContext dbContext,
-        KeyboardShortcutService shortcutService)
+        KeyboardShortcutService shortcutService, WindowInputService windowInputService)
     {
+        _windowInputService = windowInputService;
+
         _context = dbContext ??
                    throw new ArgumentNullException(nameof(dbContext));
 
@@ -36,63 +42,35 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
                            throw new ArgumentNullException(
                                nameof(shortcutService));
 
+
         _shortcutService.ShortcutPressed += OnShortcutPressed;
         _shortcutService.Start();
     }
 
 
-    public void AddApplication(
+    public async Task<bool> AddApplicationAsync(
         string filePath,
-        EntityTabItem? tab = null,
-        Point2D position = default)
+        EntityTabItem? tab = null)
     {
-        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
-        {
-            return;
-        }
+        _addApplicationCts?.Cancel();
+        _addApplicationCts?.Dispose();
 
-        if (tab == null)
-        {
-            tab = _context.TabItems.FirstOrDefault();
-
-            if (tab == null)
-            {
-                tab = new EntityTabItem
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Test TAB",
-                    Description = "TEST Description"
-                };
-
-                _context.TabItems.Add(tab);
-            }
-        }
-
-        var fileInfo = new FileInfo(filePath);
-
-        var application = new EntityApplication
-        {
-            Id = Guid.NewGuid(),
-            Name = Path.GetFileNameWithoutExtension(fileInfo.Name),
-            Disk = Path.GetPathRoot(fileInfo.FullName) ?? string.Empty,
-            FilePath = fileInfo.FullName,
-            Arguments = string.Empty,
-            ImagePath = string.Empty,
-            Position = position,
-            TabItemId = tab.Id,
-            TabItem = tab
-        };
-
-        _context.Applications.Add(application);
+        _addApplicationCts = new CancellationTokenSource();
 
         try
         {
-            _context.SaveChanges();
+            await Task.Delay(20, _addApplicationCts.Token);
+
+            var position = _windowInputService.MousePositionGrid;
+
+            return _context.AddApplication(
+                filePath,
+                tab,
+                position);
         }
-        catch (Exception exception)
+        catch (OperationCanceledException)
         {
-            Console.WriteLine(exception);
-            throw;
+            return false;
         }
     }
 
@@ -102,6 +80,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         _mainWindow = mainWindow ??
                       throw new ArgumentNullException(nameof(mainWindow));
 
+        _windowInputService.Attach(_mainWindow);
         return this;
     }
 

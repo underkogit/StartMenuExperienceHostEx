@@ -6,7 +6,6 @@ using System.Drawing;
 namespace ExperienceHost.DataAccess.SQL.Structures;
 
 [Serializable]
- 
 public struct Point2D : IEquatable<Point2D>
 {
     public static readonly Point2D Empty;
@@ -20,20 +19,6 @@ public struct Point2D : IEquatable<Point2D>
     {
         this.x = x;
         this.y = y;
-    }
-
-
-    public Point2D(Size sz)
-    {
-        x = sz.Width;
-        y = sz.Height;
-    }
-
-
-    public Point2D(int dw)
-    {
-        x = LowInt16(dw);
-        y = HighInt16(dw);
     }
 
 
@@ -57,13 +42,10 @@ public struct Point2D : IEquatable<Point2D>
     public static implicit operator PointF(Point2D p) => new PointF(p.X, p.Y);
 
 
-    public static explicit operator Size(Point2D p) => new Size(p.X, p.Y);
+    public static Point2D operator +(Point2D pt, Point2D sz) => Add(pt, sz);
 
 
-    public static Point2D operator +(Point2D pt, Size sz) => Add(pt, sz);
-
-
-    public static Point2D operator -(Point2D pt, Size sz) => Subtract(pt, sz);
+    public static Point2D operator -(Point2D pt, Point2D sz) => Subtract(pt, sz);
 
 
     public static bool operator ==(Point2D left, Point2D right) => left.X == right.X && left.Y == right.Y;
@@ -72,23 +54,12 @@ public struct Point2D : IEquatable<Point2D>
     public static bool operator !=(Point2D left, Point2D right) => !(left == right);
 
 
-    public static Point2D Add(Point2D pt, Size sz) =>
-        new Point2D(unchecked(pt.X + sz.Width), unchecked(pt.Y + sz.Height));
+    public static Point2D Add(Point2D pt, Point2D sz) =>
+        new Point2D(unchecked(pt.X + sz.X), unchecked(pt.Y + sz.Y));
 
 
-    public static Point2D Subtract(Point2D pt, Size sz) =>
-        new Point2D(unchecked(pt.X - sz.Width), unchecked(pt.Y - sz.Height));
-
-
-    public static Point2D Ceiling(PointF value) =>
-        new Point2D(unchecked((int)Math.Ceiling(value.X)), unchecked((int)Math.Ceiling(value.Y)));
-
-
-    public static Point2D Truncate(PointF value) => new Point2D(unchecked((int)value.X), unchecked((int)value.Y));
-
-
-    public static Point2D Round(PointF value) =>
-        new Point2D(unchecked((int)Math.Round(value.X)), unchecked((int)Math.Round(value.Y)));
+    public static Point2D Subtract(Point2D pt, Point2D sz) =>
+        new Point2D(unchecked(pt.X - sz.X), unchecked(pt.Y - sz.Y));
 
 
     public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Point2D && Equals((Point2D)obj);

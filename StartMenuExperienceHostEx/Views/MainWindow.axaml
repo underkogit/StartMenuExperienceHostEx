@@ -9,6 +9,9 @@
     WindowStartupLocation="CenterScreen"
     x:CompileBindings="False"
     Background="#242424"
+    
+    Width="300"
+    Height="300"
     DragDrop.AllowDrop="True"
     DragDrop.DragOver="Window_OnDragOver"
     DragDrop.Drop="Window_OnDrop"

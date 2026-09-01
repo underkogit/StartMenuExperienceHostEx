@@ -16,10 +16,11 @@ public static class ServiceLocator
     {
         var services = new ServiceCollection();
 
-
         services.AddDbContext<SqliteDbContext>(options =>
             options.UseSqlite($"Data Source={GetDbPath()}"));
 
+
+        services.AddSingleton<WindowInputService>();
         services.AddSingleton<KeyboardShortcutService>();
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<MainWindow>();
