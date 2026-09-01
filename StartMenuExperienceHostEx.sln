@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartMenuExperienceHostEx",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExperienceHost.DataAccess.SQL", "ExperienceHost.DataAccess.SQL\ExperienceHost.DataAccess.SQL.csproj", "{6C714F97-7B3C-4BB0-8BB9-35A583CA4B8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniDashboard.Avalonia", "MiniDashboard.Avalonia\MiniDashboard.Avalonia.csproj", "{4CB3FFE5-40EC-4081-941B-BD79C39A880C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{6C714F97-7B3C-4BB0-8BB9-35A583CA4B8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C714F97-7B3C-4BB0-8BB9-35A583CA4B8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C714F97-7B3C-4BB0-8BB9-35A583CA4B8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CB3FFE5-40EC-4081-941B-BD79C39A880C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CB3FFE5-40EC-4081-941B-BD79C39A880C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CB3FFE5-40EC-4081-941B-BD79C39A880C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CB3FFE5-40EC-4081-941B-BD79C39A880C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

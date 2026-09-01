@@ -5,10 +5,10 @@
              x:Name="Root"
              x:CompileBindings="False"
 
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="80"
              x:Class="StartMenuExperienceHostEx.Views.Controls.ApplicationControl">
     <Border CornerRadius="4" Padding="20,0" Background="#43454a">
-        <StackPanel Orientation="Vertical" Background="red">
+        <StackPanel Orientation="Vertical" Background="red" Margin="0,10, 0,5">
             <Image
                 Width="45"
                 Height="45"

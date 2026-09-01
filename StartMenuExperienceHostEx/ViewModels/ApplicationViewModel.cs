@@ -10,6 +10,9 @@ public partial class ApplicationViewModel : ViewModelBase
     private readonly EntityApplication _entity;
 
     [ObservableProperty] private Bitmap? _image;
+    [ObservableProperty] private double _x;
+
+    [ObservableProperty] private double _y;
 
     public ApplicationViewModel(EntityApplication entity)
     {
@@ -20,7 +23,7 @@ public partial class ApplicationViewModel : ViewModelBase
     public string Name => _entity.Name;
     public string Disk => _entity.Disk;
     public string FilePath => _entity.FilePath;
-    public string FullFilePath => Path.Combine(_entity.Disk ,_entity.FilePath);
+    public string FullFilePath => Path.Combine(_entity.Disk, _entity.FilePath);
     public string ImagePath => _entity.ImagePath;
 
     private void LoadImage()
