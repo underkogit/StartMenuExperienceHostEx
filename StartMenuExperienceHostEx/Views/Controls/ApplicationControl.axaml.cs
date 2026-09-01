@@ -9,6 +9,10 @@ namespace StartMenuExperienceHostEx.Views.Controls;
 
 public partial class ApplicationControl : UserControl
 {
+    public static readonly StyledProperty<Guid> IdProperty =
+        AvaloniaProperty.Register<ApplicationControl, Guid>(
+            nameof(Id));
+
     public static readonly StyledProperty<string?> ApplicationNameProperty =
         AvaloniaProperty.Register<ApplicationControl, string?>(
             nameof(ApplicationName));
@@ -31,11 +35,19 @@ public partial class ApplicationControl : UserControl
 
     public static readonly RoutedEvent<DragEventArgs> DragOverEvent =
         RoutedEvent.Register<ApplicationControl, DragEventArgs>(
-            nameof(DragOver), RoutingStrategies.Bubble);
+            nameof(DragOver),
+            RoutingStrategies.Bubble);
 
     public static readonly RoutedEvent<DragEventArgs> DropEvent =
         RoutedEvent.Register<ApplicationControl, DragEventArgs>(
-            nameof(Drop), RoutingStrategies.Bubble);
+            nameof(Drop),
+            RoutingStrategies.Bubble);
+
+    public Guid Id
+    {
+        get => GetValue(IdProperty);
+        set => SetValue(IdProperty, value);
+    }
 
     public string? ApplicationName
     {

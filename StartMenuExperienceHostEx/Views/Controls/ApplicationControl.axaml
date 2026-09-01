@@ -17,7 +17,7 @@
 
             <TextBlock
                 HorizontalAlignment="Center"
-                Text="{Binding ApplicationName, ElementName=Root}"
+                Text="{Binding Id, ElementName=Root}"
                 FontSize="12"
                 Foreground="White" />
         </StackPanel>

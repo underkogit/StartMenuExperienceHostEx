@@ -10,16 +10,21 @@ using Avalonia.VisualTree;
 using StartMenuExperienceHostEx.Helper;
 using StartMenuExperienceHostEx.Services;
 using StartMenuExperienceHostEx.ViewModels;
+using StartMenuExperienceHostEx.Views.Controls;
 
 namespace StartMenuExperienceHostEx.Views;
 
 public partial class MainWindow : Window
 {
+    public DraggableCanvas? DraggableCanvas { get; private set; }
+
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = ServiceLocator.GetService<MainWindowViewModel>().SetMainWindow(this);
+        DataContext = ServiceLocator.GetService<MainWindowViewModel>();
     }
+
+ 
 
     private void Window_OnDragOver(object? sender, DragEventArgs e)
     {
@@ -77,6 +82,17 @@ public partial class MainWindow : Window
 
         {
             disposable.Dispose();
+        }
+    }
+
+    private async void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel mainWindowViewModel)
+
+        {
+            DraggableCanvas = this.FindControl<DraggableCanvas>("PCanvas");
+            mainWindowViewModel.SetMainWindow(this);
+            await mainWindowViewModel.Refresh();
         }
     }
 }

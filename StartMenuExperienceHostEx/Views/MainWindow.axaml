@@ -5,50 +5,28 @@
     xmlns:controls="clr-namespace:StartMenuExperienceHostEx.Views.Controls"
     x:Class="StartMenuExperienceHostEx.Views.MainWindow"
     x:DataType="vm:MainWindowViewModel"
+    x:CompileBindings="False"
+
     WindowDecorations="BorderOnly"
     WindowStartupLocation="CenterScreen"
-    x:CompileBindings="False"
     Background="#242424"
-    
+
     Width="300"
     Height="300"
+
     DragDrop.AllowDrop="True"
     DragDrop.DragOver="Window_OnDragOver"
     DragDrop.Drop="Window_OnDrop"
-    
+
+    Loaded="OnLoaded"
     Closing="WinOnClosing"
     Closed="WinOnClosed">
-    <Grid Margin="40">
-        <ScrollViewer
-            HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Auto">
 
-            <ItemsControl
-                x:Name="ApplicationsControl"
-                ItemsSource="{Binding Applications}">
-
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel ItemSpacing="2" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-
-
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:ApplicationViewModel">
-                        <controls:ApplicationControl
-                            Width="96"
-                            Height="84"
-
-                            ApplicationName="{Binding Name}"
-                            Disk="{Binding Disk}"
-                            FilePath="{Binding FilePath}"
-                            FullFilePath="{Binding FullFilePath}"
-                            Image="{Binding Image}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-
-            </ItemsControl>
-        </ScrollViewer>
+    <Grid>
+        
+        
+        <controls:DraggableCanvas Name="PCanvas" Background="Transparent">
+             
+        </controls:DraggableCanvas>
     </Grid>
 </Window>

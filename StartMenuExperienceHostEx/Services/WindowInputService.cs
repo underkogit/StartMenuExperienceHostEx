@@ -8,7 +8,7 @@ namespace StartMenuExperienceHostEx.Services;
 
 public sealed class WindowInputService : IDisposable
 {
-    private Window? _window;
+    private Canvas? _userControl;
     private Point _mousePosition;
 
     public Point2D MousePosition { get; private set; } = new();
@@ -19,38 +19,38 @@ public sealed class WindowInputService : IDisposable
 
     public event Action<Point2D, Point2D>? MousePositionChanged;
 
-    public void Attach(Window window)
+    public void Attach(Canvas window)
     {
         ArgumentNullException.ThrowIfNull(window);
 
-        if (ReferenceEquals(_window, window))
+        if (ReferenceEquals(_userControl, window))
             return;
 
         Detach();
 
-        _window = window;
-        _window.PointerMoved += OnPointerMoved;
+        _userControl = window;
+        _userControl.PointerMoved += OnPointerMoved;
     }
 
     public void Detach()
     {
-        if (_window is null)
+        if (_userControl is null)
             return;
 
-        _window.PointerMoved -= OnPointerMoved;
-        _window = null;
+        _userControl.PointerMoved -= OnPointerMoved;
+        _userControl = null;
     }
 
     private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
-        if (_window is null)
+        if (_userControl is null)
             return;
 
         if (GridSize <= 0)
             throw new InvalidOperationException(
                 "GridSize > 0");
 
-        var position = e.GetPosition(_window);
+        var position = e.GetPosition(_userControl);
         if (position == _mousePosition)
             return;
         _mousePosition = position;
