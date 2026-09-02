@@ -25,6 +25,7 @@ public partial class App : Application
         {
             var mainWindow = ServiceLocator.GetService<MainWindow>();
             desktop.MainWindow = mainWindow;
+             
         }
 
         base.OnFrameworkInitializationCompleted();

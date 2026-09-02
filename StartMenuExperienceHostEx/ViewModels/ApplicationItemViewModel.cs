@@ -5,7 +5,7 @@ using ExperienceHost.DataAccess.SQL.Entities;
 
 namespace StartMenuExperienceHostEx.ViewModels;
 
-public partial class ApplicationViewModel : ViewModelBase
+public partial class ApplicationItemViewModel : ViewModelBase
 {
     private readonly EntityApplication _entity;
 
@@ -14,7 +14,7 @@ public partial class ApplicationViewModel : ViewModelBase
 
     [ObservableProperty] private double _y;
 
-    public ApplicationViewModel(EntityApplication entity)
+    public ApplicationItemViewModel(EntityApplication entity)
     {
         _entity = entity;
         LoadImage();

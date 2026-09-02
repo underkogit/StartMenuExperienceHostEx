@@ -22,6 +22,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = ServiceLocator.GetService<MainWindowViewModel>();
+      
     }
 
  

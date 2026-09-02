@@ -13,20 +13,20 @@ public partial class ApplicationControl : UserControl
         AvaloniaProperty.Register<ApplicationControl, Guid>(
             nameof(Id));
 
-    public static readonly StyledProperty<string?> ApplicationNameProperty =
-        AvaloniaProperty.Register<ApplicationControl, string?>(
+    public static readonly StyledProperty<string> ApplicationNameProperty =
+        AvaloniaProperty.Register<ApplicationControl, string>(
             nameof(ApplicationName));
 
-    public static readonly StyledProperty<string?> DiskProperty =
-        AvaloniaProperty.Register<ApplicationControl, string?>(
+    public static readonly StyledProperty<string> DiskProperty =
+        AvaloniaProperty.Register<ApplicationControl, string>(
             nameof(Disk));
 
-    public static readonly StyledProperty<string?> FilePathProperty =
-        AvaloniaProperty.Register<ApplicationControl, string?>(
+    public static readonly StyledProperty<string> FilePathProperty =
+        AvaloniaProperty.Register<ApplicationControl, string>(
             nameof(FilePath));
 
-    public static readonly StyledProperty<string?> FullFilePathProperty =
-        AvaloniaProperty.Register<ApplicationControl, string?>(
+    public static readonly StyledProperty<string> FullFilePathProperty =
+        AvaloniaProperty.Register<ApplicationControl, string>(
             nameof(FullFilePath));
 
     public static readonly StyledProperty<Bitmap?> ImageProperty =
@@ -49,25 +49,25 @@ public partial class ApplicationControl : UserControl
         set => SetValue(IdProperty, value);
     }
 
-    public string? ApplicationName
+    public string ApplicationName
     {
         get => GetValue(ApplicationNameProperty);
         set => SetValue(ApplicationNameProperty, value);
     }
 
-    public string? Disk
+    public string Disk
     {
         get => GetValue(DiskProperty);
         set => SetValue(DiskProperty, value);
     }
 
-    public string? FilePath
+    public string FilePath
     {
         get => GetValue(FilePathProperty);
         set => SetValue(FilePathProperty, value);
     }
 
-    public string? FullFilePath
+    public string FullFilePath
     {
         get => GetValue(FullFilePathProperty);
         set => SetValue(FullFilePathProperty, value);

@@ -22,7 +22,7 @@ namespace StartMenuExperienceHostEx.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase, IDisposable
 {
-    [ObservableProperty] private ObservableCollection<ApplicationViewModel> _applications = new();
+    [ObservableProperty] private ObservableCollection<ApplicationItemViewModel> _applications = new();
 
     private readonly SqliteDbContext _context;
     private readonly KeyboardShortcutService _shortcutService;
@@ -71,7 +71,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
 
             Canvas.SetLeft(item, entityApplication.PositionX);
             Canvas.SetTop(item, entityApplication.PositionY);
-
+             
             _draggableCanvas.Children.Add(item);
         }
     }
@@ -96,7 +96,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
                 filePath,
                 tab,
                 position);
-            Console.WriteLine(position);
+          
             await Refresh();
             return status;
         }

@@ -16,26 +16,30 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="12.1.1"/>
         <PackageReference Include="Avalonia.Desktop" Version="12.1.1"/>
+        
         <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1"/>
         <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
+
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11"/>
+
+
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ExperienceHost.DataAccess.SQL\ExperienceHost.DataAccess.SQL.csproj"/>
     </ItemGroup>
 
-<!--    <Target Name="CopyNativeDll" AfterTargets="Build">-->
-<!--        <PropertyGroup>-->
-<!--            <SourceDll>$(ProjectDir)..\StartMenuExperienceHostExNative\target\release\StartMenuExperienceHostExNative.dll</SourceDll>-->
-<!--            <DestFolder>$(ProjectDir)Native\win-x64\</DestFolder>-->
-<!--        </PropertyGroup>-->
-<!--        <Error Text="Rust DLL not found: $(SourceDll)" Condition="!Exists('$(SourceDll)')"/>-->
-<!--        <MakeDir Directories="$(DestFolder)" Condition="!Exists('$(DestFolder)')"/>-->
-<!--        <Copy SourceFiles="$(SourceDll)" DestinationFolder="$(DestFolder)"/>-->
-<!--        <Copy SourceFiles="$(SourceDll)" DestinationFolder="$(OutputPath)"/>-->
-<!--    </Target>-->
+    <!--    <Target Name="CopyNativeDll" AfterTargets="Build">-->
+    <!--        <PropertyGroup>-->
+    <!--            <SourceDll>$(ProjectDir)..\StartMenuExperienceHostExNative\target\release\StartMenuExperienceHostExNative.dll</SourceDll>-->
+    <!--            <DestFolder>$(ProjectDir)Native\win-x64\</DestFolder>-->
+    <!--        </PropertyGroup>-->
+    <!--        <Error Text="Rust DLL not found: $(SourceDll)" Condition="!Exists('$(SourceDll)')"/>-->
+    <!--        <MakeDir Directories="$(DestFolder)" Condition="!Exists('$(DestFolder)')"/>-->
+    <!--        <Copy SourceFiles="$(SourceDll)" DestinationFolder="$(DestFolder)"/>-->
+    <!--        <Copy SourceFiles="$(SourceDll)" DestinationFolder="$(OutputPath)"/>-->
+    <!--    </Target>-->
 
     <ItemGroup>
         <Content Include="Native\win-x64\*.dll">
@@ -50,9 +54,9 @@
             <DestFolder>$(OutputPath)</DestFolder>
             <ProjectDbFolder>$(ProjectDir)Database\</ProjectDbFolder>
         </PropertyGroup>
-<!--        <Error Text="Database not found: $(SourceDb)" Condition="!Exists('$(SourceDb)')"/>-->
+        <!--        <Error Text="Database not found: $(SourceDb)" Condition="!Exists('$(SourceDb)')"/>-->
         <MakeDir Directories="$(DestFolder)" Condition="!Exists('$(DestFolder)')"/>
-<!--        <Copy SourceFiles="$(SourceDb)" DestinationFolder="$(DestFolder)" Condition="Exists('$(SourceDb)')"/>-->
+        <!--        <Copy SourceFiles="$(SourceDb)" DestinationFolder="$(DestFolder)" Condition="Exists('$(SourceDb)')"/>-->
         <MakeDir Directories="$(ProjectDbFolder)" Condition="!Exists('$(ProjectDbFolder)')"/>
         <Copy SourceFiles="$(SourceDb)" DestinationFolder="$(ProjectDbFolder)" Condition="Exists('$(SourceDb)')"/>
     </Target>

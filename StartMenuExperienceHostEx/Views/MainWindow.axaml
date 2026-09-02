@@ -7,12 +7,19 @@
     x:DataType="vm:MainWindowViewModel"
     x:CompileBindings="False"
 
+     
+ 
+  
     WindowDecorations="BorderOnly"
+    CanResize="True"
+     
+
+    
     WindowStartupLocation="CenterScreen"
     Background="#242424"
 
-    Width="300"
-    Height="300"
+    Width="800"
+    Height="400"
 
     DragDrop.AllowDrop="True"
     DragDrop.DragOver="Window_OnDragOver"
@@ -21,12 +28,14 @@
     Loaded="OnLoaded"
     Closing="WinOnClosing"
     Closed="WinOnClosed">
-
+    
     <Grid>
         
         
         <controls:DraggableCanvas Name="PCanvas" Background="Transparent">
              
         </controls:DraggableCanvas>
+        
+        
     </Grid>
 </Window>
