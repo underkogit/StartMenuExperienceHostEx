@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media.Imaging;
 using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ExperienceHost.DataAccess.SQL.Data;
@@ -29,9 +30,12 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     private readonly WindowInputService _windowInputService;
     private DraggableCanvas _draggableCanvas;
     private MainWindow? _mainWindow;
-    private bool _status = true;
+    private bool _status = false;
     private bool _disposed;
     private CancellationTokenSource? _addApplicationCts;
+    private IconExtractor _extractor = new IconExtractor(@"Native\win-x64\icon_extractor.exe");
+    private WindowMessageInterceptor? _messageInterceptor;
+    private nint HWND = 0;
 
     public MainWindowViewModel(
         SqliteDbContext dbContext,
@@ -63,15 +67,18 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             {
                 Id = entityApplication.Id,
                 ApplicationName = entityApplication.Name,
-                Disk = entityApplication.Disk,
+
                 FilePath = entityApplication.FilePath,
                 FullFilePath = entityApplication.FilePath,
-                 
+
+                Image = File.Exists(entityApplication.ImagePath)
+                    ? new Bitmap(entityApplication.ImagePath)
+                    : null
             };
 
             Canvas.SetLeft(item, entityApplication.PositionX);
             Canvas.SetTop(item, entityApplication.PositionY);
-             
+
             _draggableCanvas.Children.Add(item);
         }
     }
@@ -90,13 +97,35 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         {
             await Task.Delay(20, _addApplicationCts.Token);
 
+
+            string fullPath;
+            try
+            {
+                fullPath = Path.GetFullPath(filePath);
+            }
+            catch
+            {
+                fullPath = filePath;
+            }
+
             var position = _windowInputService.MousePositionGrid;
+            var name = Path.GetFileNameWithoutExtension(fullPath);
+            var disk = Path.GetPathRoot(fullPath) ?? string.Empty;
+
+            var arguments = string.Empty;
+            var imagePath = Path.GetFullPath($"icons/{name}.png");
+
+            if (!_extractor.ExtractIcon(fullPath, imagePath))
+                imagePath = string.Empty;
 
             var status = _context.AddApplication(
-                filePath,
+                name,
+                fullPath,
+                arguments,
+                imagePath,
                 tab,
                 position);
-          
+
             await Refresh();
             return status;
         }
@@ -117,7 +146,23 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             _draggableCanvas.ElementReleased += DraggableCanvasOnElementReleased;
         }
 
+        HWND = _mainWindow?.GetWindowHandle() ?? 0;
+        _messageInterceptor = new WindowMessageInterceptor(_mainWindow);
+        _messageInterceptor.MessageReceived += OnMessageReceived;
         return this;
+    }
+
+    private void OnMessageReceived(object? sender, WindowMessageEventArgs e)
+    {
+        if (e.Message == 0x0007 || e.Message == 0x0008 || e.Message == 0x0006)
+        {
+            _mainWindow?.Dispatcher.Post(async () =>
+            {
+                if (_status)
+                    _messageInterceptor?.MakeTopMost();
+            });
+            Console.WriteLine(e.ToString());
+        }
     }
 
     private void DraggableCanvasOnElementReleased(ApplicationControl element, Point2D position)
@@ -129,7 +174,7 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
         object? sender,
         ShortcutEventArgs e)
     {
-        _mainWindow?.Dispatcher.Post(() =>
+        _mainWindow?.Dispatcher.Post(async () =>
         {
             if (_disposed || _mainWindow is null)
                 return;
@@ -137,10 +182,11 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
             _status = !_status;
             _mainWindow.SetWindowVisibility(_status);
 
-            if (_mainWindow.GetWindowHandle() is { } handle && handle != IntPtr.Zero)
-            {
-                NativeLoader.NativeMethods.set_window_zorder((uint)handle, 0);
-            }
+            if (_status)
+                await Refresh();
+
+            WindowZOrder.SetWindowZOrder(HWND, 0);
+
 
             Console.WriteLine(
                 $"{_status} ShortcutServiceOnShortcutPressed");
@@ -156,5 +202,9 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
 
         _shortcutService.ShortcutPressed -= OnShortcutPressed;
         _shortcutService.Stop();
+
+
+        _messageInterceptor?.Dispose();
+        _messageInterceptor = null;
     }
 }

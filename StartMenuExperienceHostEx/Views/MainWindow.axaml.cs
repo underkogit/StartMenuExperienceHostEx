@@ -17,15 +17,14 @@ namespace StartMenuExperienceHostEx.Views;
 public partial class MainWindow : Window
 {
     public DraggableCanvas? DraggableCanvas { get; private set; }
+   
 
     public MainWindow()
     {
         InitializeComponent();
         DataContext = ServiceLocator.GetService<MainWindowViewModel>();
-      
     }
 
- 
 
     private void Window_OnDragOver(object? sender, DragEventArgs e)
     {
@@ -82,15 +81,19 @@ public partial class MainWindow : Window
         if (DataContext is IDisposable disposable)
 
         {
+           
             disposable.Dispose();
         }
     }
 
+    
+
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
         if (DataContext is MainWindowViewModel mainWindowViewModel)
-
         {
+           
+
             DraggableCanvas = this.FindControl<DraggableCanvas>("PCanvas");
             mainWindowViewModel.SetMainWindow(this);
             await mainWindowViewModel.Refresh();

@@ -6,7 +6,7 @@
     x:Class="StartMenuExperienceHostEx.Views.MainWindow"
     x:DataType="vm:MainWindowViewModel"
     x:CompileBindings="False"
-
+    
      
  
   
@@ -18,8 +18,8 @@
     WindowStartupLocation="CenterScreen"
     Background="#242424"
 
-    Width="800"
-    Height="400"
+    Width="1500"
+    Height="800"
 
     DragDrop.AllowDrop="True"
     DragDrop.DragOver="Window_OnDragOver"
@@ -32,9 +32,13 @@
     <Grid>
         
         
-        <controls:DraggableCanvas Name="PCanvas" Background="Transparent">
-             
-        </controls:DraggableCanvas>
+       <ScrollViewer VerticalScrollBarVisibility="Visible">
+           <Grid>
+               <controls:DraggableCanvas Name="PCanvas" Background="Transparent">
+                   
+               </controls:DraggableCanvas>
+           </Grid>
+       </ScrollViewer>
         
         
     </Grid>

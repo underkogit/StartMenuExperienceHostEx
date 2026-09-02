@@ -21,9 +21,9 @@ public partial class ApplicationItemViewModel : ViewModelBase
     }
 
     public string Name => _entity.Name;
-    public string Disk => _entity.Disk;
+
     public string FilePath => _entity.FilePath;
-    public string FullFilePath => Path.Combine(_entity.Disk, _entity.FilePath);
+
     public string ImagePath => _entity.ImagePath;
 
     private void LoadImage()

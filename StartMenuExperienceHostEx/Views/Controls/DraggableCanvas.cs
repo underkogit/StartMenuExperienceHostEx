@@ -17,16 +17,19 @@ public sealed class DraggableCanvas : Canvas
     private IPointer? _pointer;
     private Point _offset;
 
+    private bool _leftCtrlPressed;
+
     public delegate void ElementReleasedHandler(
         ApplicationControl element,
         Point2D position);
-
 
     public event ElementReleasedHandler? ElementReleased;
 
     public DraggableCanvas()
     {
         _inputService = ServiceLocator.GetService<WindowInputService>();
+
+        Focusable = true;
     }
 
     protected override void OnAttachedToVisualTree(
@@ -51,21 +54,88 @@ public sealed class DraggableCanvas : Canvas
             PointerCaptureLostEvent,
             OnPointerCaptureLost,
             RoutingStrategies.Bubble);
+
+        AddHandler(
+            KeyDownEvent,
+            OnKeyDown,
+            RoutingStrategies.Bubble);
+
+        AddHandler(
+            KeyUpEvent,
+            OnKeyUp,
+            RoutingStrategies.Bubble);
     }
 
     protected override void OnDetachedFromVisualTree(
         VisualTreeAttachmentEventArgs e)
     {
+        RemoveHandler(
+            PointerPressedEvent,
+            OnPointerPressed);
+
+        RemoveHandler(
+            PointerReleasedEvent,
+            OnPointerReleased);
+
+        RemoveHandler(
+            PointerCaptureLostEvent,
+            OnPointerCaptureLost);
+
+        RemoveHandler(
+            KeyDownEvent,
+            OnKeyDown);
+
+        RemoveHandler(
+            KeyUpEvent,
+            OnKeyUp);
+
         _inputService.MousePositionChanged -= OnMousePositionChanged;
         _inputService.Detach();
 
+        StopDragging();
+
         base.OnDetachedFromVisualTree(e);
+    }
+
+    private void OnKeyDown(
+        object? sender,
+        KeyEventArgs e)
+    {
+        if (e.Key != Key.LeftCtrl)
+        {
+            return;
+        }
+
+        _leftCtrlPressed = true;
+    }
+
+    private void OnKeyUp(
+        object? sender,
+        KeyEventArgs e)
+    {
+        if (e.Key != Key.LeftCtrl)
+        {
+            return;
+        }
+
+        _leftCtrlPressed = false;
+
+        if (_draggedElement is not null)
+        {
+            StopDragging();
+        }
     }
 
     private void OnPointerPressed(
         object? sender,
         PointerPressedEventArgs e)
     {
+        // Перетаскивание разрешено только при зажатом левом Ctrl
+        if (!_leftCtrlPressed)
+        {
+            return;
+        }
+
         var point = e.GetCurrentPoint(this);
 
         if (point.Properties.PointerUpdateKind !=
@@ -75,7 +145,9 @@ public sealed class DraggableCanvas : Canvas
         }
 
         if (e.Source is not Visual source)
+        {
             return;
+        }
 
         Visual element = source;
 
@@ -100,10 +172,14 @@ public sealed class DraggableCanvas : Canvas
         var top = Canvas.GetTop(control);
 
         if (double.IsNaN(left))
+        {
             left = 0;
+        }
 
         if (double.IsNaN(top))
+        {
             top = 0;
+        }
 
         _offset = new Point(
             mousePosition.X - left,
@@ -119,7 +195,8 @@ public sealed class DraggableCanvas : Canvas
         Point2D mousePositionGrid)
     {
         if (_draggedElement is null ||
-            _pointer is null)
+            _pointer is null ||
+            !_leftCtrlPressed)
         {
             return;
         }
@@ -134,14 +211,18 @@ public sealed class DraggableCanvas : Canvas
         {
             x = Math.Min(
                 x,
-                Math.Max(0, Width - _draggedElement.Bounds.Width));
+                Math.Max(
+                    0,
+                    Width - _draggedElement.Bounds.Width));
         }
 
         if (!double.IsNaN(Height))
         {
             y = Math.Min(
                 y,
-                Math.Max(0, Height - _draggedElement.Bounds.Height));
+                Math.Max(
+                    0,
+                    Height - _draggedElement.Bounds.Height));
         }
 
         Canvas.SetLeft(_draggedElement, x);
@@ -158,19 +239,32 @@ public sealed class DraggableCanvas : Canvas
             return;
         }
 
-        if (_draggedElement is not null)
+        if (_draggedElement is ApplicationControl application)
         {
+            var left = Canvas.GetLeft(_draggedElement);
+            var top = Canvas.GetTop(_draggedElement);
+
+            if (double.IsNaN(left))
+            {
+                left = 0;
+            }
+
+            if (double.IsNaN(top))
+            {
+                top = 0;
+            }
+
             var position = new Point2D(
-                (int)Canvas.GetLeft(_draggedElement),
-                (int)Canvas.GetTop(_draggedElement));
-            if (_draggedElement is ApplicationControl application)
-                ElementReleased?.Invoke(
-                    application,
-                    position);
+                (int)left,
+                (int)top);
+
+            ElementReleased?.Invoke(
+                application,
+                position);
         }
 
-
         StopDragging();
+
         e.Handled = true;
     }
 

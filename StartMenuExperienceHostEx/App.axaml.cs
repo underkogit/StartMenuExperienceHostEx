@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using StartMenuExperienceHostEx.Helper;
 using StartMenuExperienceHostEx.Services;
@@ -24,8 +25,9 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var mainWindow = ServiceLocator.GetService<MainWindow>();
-            desktop.MainWindow = mainWindow;
-             
+            mainWindow.Hide();
+                //desktop.MainWindow = mainWindow;
+            
         }
 
         base.OnFrameworkInitializationCompleted();

@@ -17,9 +17,6 @@ public partial class ApplicationControl : UserControl
         AvaloniaProperty.Register<ApplicationControl, string>(
             nameof(ApplicationName));
 
-    public static readonly StyledProperty<string> DiskProperty =
-        AvaloniaProperty.Register<ApplicationControl, string>(
-            nameof(Disk));
 
     public static readonly StyledProperty<string> FilePathProperty =
         AvaloniaProperty.Register<ApplicationControl, string>(
@@ -55,11 +52,6 @@ public partial class ApplicationControl : UserControl
         set => SetValue(ApplicationNameProperty, value);
     }
 
-    public string Disk
-    {
-        get => GetValue(DiskProperty);
-        set => SetValue(DiskProperty, value);
-    }
 
     public string FilePath
     {

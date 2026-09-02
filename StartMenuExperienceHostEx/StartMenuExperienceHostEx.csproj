@@ -7,7 +7,10 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     </PropertyGroup>
-
+    <PropertyGroup>
+        <PlatformTarget>x64</PlatformTarget>
+        <Prefer32Bit>false</Prefer32Bit>
+    </PropertyGroup>
     <ItemGroup>
         <Folder Include="Models\"/>
         <AvaloniaResource Include="Assets\**"/>
@@ -16,37 +19,44 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="12.1.1"/>
         <PackageReference Include="Avalonia.Desktop" Version="12.1.1"/>
-        
         <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.1"/>
         <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.1"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
-
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11"/>
-
-
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ExperienceHost.DataAccess.SQL\ExperienceHost.DataAccess.SQL.csproj"/>
     </ItemGroup>
 
-    <!--    <Target Name="CopyNativeDll" AfterTargets="Build">-->
-    <!--        <PropertyGroup>-->
-    <!--            <SourceDll>$(ProjectDir)..\StartMenuExperienceHostExNative\target\release\StartMenuExperienceHostExNative.dll</SourceDll>-->
-    <!--            <DestFolder>$(ProjectDir)Native\win-x64\</DestFolder>-->
-    <!--        </PropertyGroup>-->
-    <!--        <Error Text="Rust DLL not found: $(SourceDll)" Condition="!Exists('$(SourceDll)')"/>-->
-    <!--        <MakeDir Directories="$(DestFolder)" Condition="!Exists('$(DestFolder)')"/>-->
-    <!--        <Copy SourceFiles="$(SourceDll)" DestinationFolder="$(DestFolder)"/>-->
-    <!--        <Copy SourceFiles="$(SourceDll)" DestinationFolder="$(OutputPath)"/>-->
-    <!--    </Target>-->
+    <Target Name="CopyNativeDll" AfterTargets="Build">
+        <PropertyGroup>
+            <SourceDll>$(ProjectDir)..\StartMenuExperienceHostExNative\target\release\StartMenuExperienceHostExNative.dll</SourceDll>
+            <DestFolder>$(ProjectDir)Native\win-x64\</DestFolder>
+        </PropertyGroup>
+        <Error Text="Rust DLL not found: $(SourceDll)" Condition="!Exists('$(SourceDll)')"/>
+        <MakeDir Directories="$(DestFolder)" Condition="!Exists('$(DestFolder)')"/>
+        <Copy SourceFiles="$(SourceDll)" DestinationFolder="$(DestFolder)"/>
+    </Target>
+
+    <Target Name="CopyIconExtractor" AfterTargets="Build">
+        <PropertyGroup>
+            <IconExtractorSource>$(ProjectDir)..\StartMenuExperienceHostExIconExtract\output\icon_extractor.exe</IconExtractorSource>
+            <IconExtractorDest>$(ProjectDir)Native\win-x64\icon_extractor.exe</IconExtractorDest>
+        </PropertyGroup>
+        <Error Text="Icon extractor not found: $(IconExtractorSource)" Condition="!Exists('$(IconExtractorSource)')"/>
+        <MakeDir Directories="$(ProjectDir)Native\win-x64" Condition="!Exists('$(ProjectDir)Native\win-x64')"/>
+        <Copy SourceFiles="$(IconExtractorSource)" DestinationFiles="$(IconExtractorDest)"/>
+    </Target>
 
     <ItemGroup>
         <Content Include="Native\win-x64\*.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="Native\win-x64\*.exe">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
-
 
     <Target Name="CopyDatabase" AfterTargets="Build">
         <PropertyGroup>
@@ -54,9 +64,7 @@
             <DestFolder>$(OutputPath)</DestFolder>
             <ProjectDbFolder>$(ProjectDir)Database\</ProjectDbFolder>
         </PropertyGroup>
-        <!--        <Error Text="Database not found: $(SourceDb)" Condition="!Exists('$(SourceDb)')"/>-->
         <MakeDir Directories="$(DestFolder)" Condition="!Exists('$(DestFolder)')"/>
-        <!--        <Copy SourceFiles="$(SourceDb)" DestinationFolder="$(DestFolder)" Condition="Exists('$(SourceDb)')"/>-->
         <MakeDir Directories="$(ProjectDbFolder)" Condition="!Exists('$(ProjectDbFolder)')"/>
         <Copy SourceFiles="$(SourceDb)" DestinationFolder="$(ProjectDbFolder)" Condition="Exists('$(SourceDb)')"/>
     </Target>

@@ -8,7 +8,7 @@ namespace ExperienceHost.DataAccess.SQL.Entities;
 public class EntityApplication : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
-    public string Disk { get; set; } = string.Empty;
+    
     public string FilePath { get; set; } = string.Empty;
     public string Arguments { get; set; } = string.Empty;
     public string ImagePath { get; set; } = string.Empty;
@@ -37,7 +37,7 @@ public class EntityApplication : BaseEntity
 
         builder.AppendLine($"{nameof(EntityApplication)}:");
         builder.AppendLine($"  {nameof(Name)}: {Name}");
-        builder.AppendLine($"  {nameof(Disk)}: {Disk}");
+        
         builder.AppendLine($"  {nameof(FilePath)}: {FilePath}");
         builder.AppendLine($"  {nameof(Arguments)}: {Arguments}");
         builder.AppendLine($"  {nameof(ImagePath)}: {ImagePath}");
